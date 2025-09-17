@@ -12,17 +12,17 @@ const Sidebar = ({ activeTab, setActiveTab }) => {
 
   const menuItems = [
     { id: 'dashboard', label: 'Dashboard', icon: '📊', type: 'single' },
-    { 
-      id: 'patients', 
-      label: 'Patient Management', 
-      icon: '🏥', 
-      type: 'submenu',
-      subItems: [
-        { id: 'patient-list', label: 'Patient List', icon: '👥' },
-        { id: 'patient-registration', label: 'New Registration', icon: '📝' },
-        { id: 'patient-history', label: 'Medical History', icon: '📋' }
-      ]
-    },
+    // { 
+    //   id: 'patients', 
+    //   label: 'Patient Management', 
+    //   icon: '🏥', 
+    //   type: 'submenu',
+    //   subItems: [
+    //     { id: 'patient-list', label: 'Patient List', icon: '👥' },
+    //     { id: 'patient-registration', label: 'New Registration', icon: '📝' },
+    //     { id: 'patient-history', label: 'Medical History', icon: '📋' }
+    //   ]
+    // },
     { 
       id: 'doctors', 
       label: 'Doctor Management', 
@@ -30,55 +30,54 @@ const Sidebar = ({ activeTab, setActiveTab }) => {
       type: 'submenu',
       subItems: [
         { id: 'doctor-list', label: 'Doctor List', icon: '👨‍⚕️' },
-        { id: 'doctor-schedule', label: 'Schedule', icon: '📅' },
-        { id: 'doctor-specialization', label: 'Specialization', icon: '🎯' }
+
       ]
     },
-    { 
-      id: 'staff', 
-      label: 'Staff Management', 
-      icon: '👩‍💼', 
-      type: 'submenu',
-      subItems: [
-        { id: 'nursing-staff', label: 'Nursing Staff', icon: '👩‍⚕️' },
-        { id: 'cleaning-staff', label: 'Cleaning Staff', icon: '🧹' },
-        { id: 'security-staff', label: 'Security Staff', icon: '🛡️' },
-        { id: 'admin-staff', label: 'Admin Staff', icon: '👨‍💼' }
-      ]
-    },
-    { 
-      id: 'pharmacy', 
-      label: 'Pharmacy', 
-      icon: '💊', 
-      type: 'submenu',
-      subItems: [
-        { id: 'medicine-inventory', label: 'Medicine Inventory', icon: '💊' },
-        { id: 'prescriptions', label: 'Prescriptions', icon: '📋' },
-        { id: 'suppliers', label: 'Suppliers', icon: '🚚' }
-      ]
-    },
-    { 
-      id: 'appointments', 
-      label: 'Appointments', 
-      icon: '📅', 
-      type: 'submenu',
-      subItems: [
-        { id: 'appointment-list', label: 'All Appointments', icon: '📅' },
-        { id: 'appointment-booking', label: 'Book Appointment', icon: '➕' },
-        { id: 'appointment-calendar', label: 'Calendar View', icon: '📆' }
-      ]
-    },
-    { 
-      id: 'billing', 
-      label: 'Billing & Finance', 
-      icon: '💰', 
-      type: 'submenu',
-      subItems: [
-        { id: 'patient-bills', label: 'Patient Bills', icon: '🧾' },
-        { id: 'insurance', label: 'Insurance', icon: '🛡️' },
-        { id: 'payments', label: 'Payments', icon: '💳' }
-      ]
-    },
+    // { 
+    //   id: 'staff', 
+    //   label: 'Staff Management', 
+    //   icon: '👩‍💼', 
+    //   type: 'submenu',
+    //   subItems: [
+    //     { id: 'nursing-staff', label: 'Nursing Staff', icon: '👩‍⚕️' },
+    //     { id: 'cleaning-staff', label: 'Cleaning Staff', icon: '🧹' },
+    //     { id: 'security-staff', label: 'Security Staff', icon: '🛡️' },
+    //     { id: 'admin-staff', label: 'Admin Staff', icon: '👨‍💼' }
+    //   ]
+    // },
+    // { 
+    //   id: 'pharmacy', 
+    //   label: 'Pharmacy', 
+    //   icon: '💊', 
+    //   type: 'submenu',
+    //   subItems: [
+    //     { id: 'medicine-inventory', label: 'Medicine Inventory', icon: '💊' },
+    //     { id: 'prescriptions', label: 'Prescriptions', icon: '📋' },
+    //     { id: 'suppliers', label: 'Suppliers', icon: '🚚' }
+    //   ]
+    // },
+    // { 
+    //   id: 'appointments', 
+    //   label: 'Appointments', 
+    //   icon: '📅', 
+    //   type: 'submenu',
+    //   subItems: [
+    //     { id: 'appointment-list', label: 'All Appointments', icon: '📅' },
+    //     { id: 'appointment-booking', label: 'Book Appointment', icon: '➕' },
+    //     { id: 'appointment-calendar', label: 'Calendar View', icon: '📆' }
+    //   ]
+    // },
+    // { 
+    //   id: 'billing', 
+    //   label: 'Billing & Finance', 
+    //   icon: '💰', 
+    //   type: 'submenu',
+    //   subItems: [
+    //     { id: 'patient-bills', label: 'Patient Bills', icon: '🧾' },
+    //     { id: 'insurance', label: 'Insurance', icon: '🛡️' },
+    //     { id: 'payments', label: 'Payments', icon: '💳' }
+    //   ]
+    // },
     // { 
     //   id: 'reports', 
     //   label: 'Reports & Analytics', 

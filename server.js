@@ -2,42 +2,52 @@ const { ApolloServer, gql } = require('apollo-server-express');
 const express = require('express');
 const cors = require('cors');
 
-// Mock data for users
+// Mock data for users with extended profile fields
 const users = [
   {
     id: '1',
     name: 'John Doe',
-    email: 'john.doe@example.com',
+    email: 'admin@hospital.com',
     age: 28,
-    department: 'Engineering'
+    department: 'Hospital Administration',
+    role: 'ADMIN',
+    lastLogin: new Date().toISOString(),
+    profile: {
+      address: {
+        country: 'USA'
+      }
+    },
+    password: 'admin123' // In real app, this would be hashed
   },
   {
     id: '2',
     name: 'Jane Smith',
     email: 'jane.smith@example.com',
     age: 32,
-    department: 'Marketing'
+    department: 'Marketing',
+    role: 'USER',
+    lastLogin: new Date(Date.now() - 86400000).toISOString(), // 1 day ago
+    profile: {
+      address: {
+        country: 'Canada'
+      }
+    },
+    password: 'password123'
   },
   {
     id: '3',
     name: 'Mike Johnson',
     email: 'mike.johnson@example.com',
     age: 25,
-    department: 'Sales'
-  },
-  {
-    id: '4',
-    name: 'Sarah Wilson',
-    email: 'sarah.wilson@example.com',
-    age: 29,
-    department: 'HR'
-  },
-  {
-    id: '5',
-    name: 'David Brown',
-    email: 'david.brown@example.com',
-    age: 35,
-    department: 'Engineering'
+    department: 'Sales',
+    role: 'USER',
+    lastLogin: new Date(Date.now() - 172800000).toISOString(), // 2 days ago
+    profile: {
+      address: {
+        country: 'UK'
+      }
+    },
+    password: 'password123'
   }
 ];
 
@@ -56,15 +66,11 @@ const posts = [
     content: 'React hooks have revolutionized how we write components...',
     authorId: '2',
     publishedAt: '2024-01-20'
-  },
-  {
-    id: '3',
-    title: 'Building Scalable APIs',
-    content: 'When building APIs, scalability should be a primary concern...',
-    authorId: '1',
-    publishedAt: '2024-01-25'
   }
 ];
+
+// Current user for authentication simulation
+let currentUser = null;
 
 // GraphQL type definitions
 const typeDefs = gql`
@@ -74,7 +80,18 @@ const typeDefs = gql`
     email: String!
     age: Int
     department: String
+    role: String!
+    lastLogin: String
+    profile: Profile
     posts: [Post!]!
+  }
+
+  type Profile {
+    address: Address
+  }
+
+  type Address {
+    country: String
   }
 
   type Post {
@@ -86,17 +103,32 @@ const typeDefs = gql`
     publishedAt: String!
   }
 
+  type AuthPayload {
+    accessToken: String!
+    email: String!
+    name: String!
+    role: String!
+    user: User!
+  }
+
+  input LoginInput {
+    email: String!
+    password: String!
+  }
+
   type Query {
     users: [User!]!
     user(id: ID!): User
     posts: [Post!]!
     post(id: ID!): Post
+    me: User
   }
 
   type Mutation {
     createUser(name: String!, email: String!, age: Int, department: String): User!
     updateUser(id: ID!, name: String, email: String, age: Int, department: String): User!
     deleteUser(id: ID!): Boolean!
+    login(input: LoginInput!): AuthPayload!
   }
 `;
 
@@ -107,6 +139,7 @@ const resolvers = {
     user: (_, { id }) => users.find(user => user.id === id),
     posts: () => posts,
     post: (_, { id }) => posts.find(post => post.id === id),
+    me: () => currentUser, // Return current authenticated user
   },
   
   User: {
@@ -125,6 +158,13 @@ const resolvers = {
         email,
         age: age || null,
         department: department || null,
+        role: 'USER',
+        lastLogin: new Date().toISOString(),
+        profile: {
+          address: {
+            country: 'Not specified'
+          }
+        }
       };
       users.push(newUser);
       return newUser;
@@ -154,6 +194,34 @@ const resolvers = {
       users.splice(userIndex, 1);
       return true;
     },
+
+    login: (_, { input }) => {
+      const { email, password } = input;
+      
+      // Find user by email and password (in real app, compare hashed passwords)
+      const user = users.find(u => u.email === email && u.password === password);
+      
+      if (!user) {
+        throw new Error('Invalid credentials');
+      }
+
+      // Update last login
+      user.lastLogin = new Date().toISOString();
+      
+      // Set current user for me query
+      currentUser = user;
+
+      // Generate a mock token (in real app, use JWT)
+      const accessToken = `mock-token-${user.id}-${Date.now()}`;
+
+      return {
+        accessToken,
+        email: user.email,
+        name: user.name,
+        role: user.role,
+        user
+      };
+    },
   },
 };
 
@@ -169,6 +237,11 @@ async function startServer() {
     resolvers,
     introspection: true, // Enable GraphQL Playground
     playground: true,    // Enable GraphQL Playground
+    context: ({ req }) => {
+      // In real app, decode JWT token here
+      const token = req.headers.authorization?.replace('Bearer ', '');
+      return { user: currentUser };
+    }
   });
   
   // Start the server
@@ -184,10 +257,10 @@ async function startServer() {
     console.log(`📊 GraphQL Playground available at http://localhost:${PORT}${server.graphqlPath}`);
     console.log(`👥 Sample users available: ${users.length} users`);
     console.log(`📝 Sample posts available: ${posts.length} posts`);
+    console.log(`🔐 Login with: admin@hospital.com / admin123`);
   });
 }
 
 startServer().catch(error => {
   console.error('Error starting server:', error);
 });
-

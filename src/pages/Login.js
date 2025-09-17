@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { toast, ToastContainer } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
-import { LOGIN_MUTATION } from '../Graphql/mutations/loginmutations';
+import { LOGIN_MUTATION } from '../Graphql/mutations/mutations/loginmutations';
 import { useMutation } from '@apollo/client';
 
 const Login = ({ onLogin }) => {
@@ -12,7 +12,7 @@ const Login = ({ onLogin }) => {
   const [loading, setLoading] = useState(false);
 
 
-const [login, { loading: loginLoading }] = useMutation(LOGIN_MUTATION);
+const [login] = useMutation(LOGIN_MUTATION);
 
 
   const handleInputChange = (e) => {
@@ -61,17 +61,15 @@ const [login, { loading: loginLoading }] = useMutation(LOGIN_MUTATION);
       });
   
       if (data?.login) {
-        const { accessToken, email, name, role } = data.login;
+        const { token, user } = data.login;
         
         // Store authentication data
-        localStorage.setItem('token', accessToken);
-        localStorage.setItem('isAuthenticated', 'true');
-        localStorage.setItem('userRole', role);
-        localStorage.setItem('userEmail', email);
-        localStorage.setItem('userName', name);
-        
-        toast.success(`Welcome back, ${name}! Login successful.`);
-        
+        localStorage.setItem("token", token);
+        localStorage.setItem("isAuthenticated", "true");
+          localStorage.setItem("userRole", user.role);
+        localStorage.setItem("userEmail", user.email);
+        localStorage.setItem("userName", user.email.split("@")[0]);
+        toast.success(`Welcome back, ${user.email.split("@")[0]}! Login successful.`);
         setTimeout(() => {
           onLogin(true);
         }, 500);

@@ -13,6 +13,7 @@ import Settings from './components/Settings';
 import PatientManagement from './components/PatientManagement';
 import Login from './pages/Login';
 import Profile from './pages/Profile';
+import DoctorList from './components/doctor/DoctorList';
 
 // Main Application Layout Component
 const AppLayout = () => {
@@ -87,6 +88,7 @@ const AppLayout = () => {
           <Routes>
             <Route path="/" element={<Navigate to="/dashboard" replace />} />
             <Route path="/dashboard" element={<Dashboard />} />
+            <Route path="/doctor-list" element={<DoctorList />} />
             <Route path="/users" element={<Users />} />
             <Route path="/patient-list" element={<PatientManagement />} />
             <Route path="/patient-registration" element={<PatientManagement />} />

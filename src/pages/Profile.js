@@ -1,31 +1,101 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
+import { useQuery, useMutation } from '@apollo/client';
 import { toast } from 'react-toastify';
+import { USER_PROFILE_QUERY } from '../Graphql/mutations/query/UserProfileQuery';
+import { USER_PROFILE_MUTATION } from '../Graphql/mutations/mutations/userProfilemutation';
+
+// Update profile mutation
 
 const Profile = () => {
   const [isEditing, setIsEditing] = useState(false);
+  
+  // Fetch profile data using GraphQL
+  const { loading, error, data, refetch } = useQuery(USER_PROFILE_QUERY, {
+    errorPolicy: 'all',
+    fetchPolicy: 'cache-and-network'
+  });
+
+  // Update profile mutation
+  const [updateProfile] = useMutation(USER_PROFILE_MUTATION);
+
+  // Initialize profile data from GraphQL response
+  const user = data?.me;
+  
   const [profileData, setProfileData] = useState({
-    name: localStorage.getItem('userName') || 'Admin User',
-    email: localStorage.getItem('userEmail') || 'admin@example.com',
-    role: localStorage.getItem('userRole') || 'ADMIN',
-    department: 'Hospital Administration',
-    phone: '+1-555-0123',
-    joinDate: '2024-01-01',
-    lastLogin: new Date().toLocaleString()
+    firstName: '',
+    lastName: '',
+    email: '',
+    role: '',
+    phone: '',
+    dateOfBirth: ''
   });
 
   const [editData, setEditData] = useState({ ...profileData });
+
+  // Update local state when GraphQL data loads
+  // Update local state when GraphQL data loads
+  useEffect(() => {
+    if (user) {
+      const updatedData = {
+        firstName: user?.profile?.firstName || '',
+        lastName: user?.profile?.lastName || '',
+        email: user.email || '',
+        role: user.role || '',
+        phone: user.profile?.phone || '',
+        dateOfBirth: user.profile?.dateOfBirth ? new Date(user.profile.dateOfBirth).toISOString().split('T')[0] : ''
+      };
+      setProfileData(updatedData);
+      setEditData(updatedData);
+    }
+  }, [user]);
 
   const handleEdit = () => {
     setIsEditing(true);
     setEditData({ ...profileData });
   };
 
-  const handleSave = () => {
-    setProfileData({ ...editData });
-    localStorage.setItem('userName', editData.name);
-    localStorage.setItem('userEmail', editData.email);
-    setIsEditing(false);
-    toast.success('Profile updated successfully!');
+  const handleSave = async () => {
+    try {
+      const { data: updateData } = await updateProfile({
+        variables: {
+          input: {
+            firstName: editData.firstName,
+            lastName: editData.lastName,
+            phone: editData.phone,
+            dateOfBirth: editData.dateOfBirth
+          }
+        }
+      });
+
+      if (updateData?.updateProfile) {
+        // Update local state with the response
+        const updatedUser = updateData.updateProfile;
+        const updatedData = {
+          firstName: updatedUser.profile?.firstName || '',
+          lastName: updatedUser.profile?.lastName || '',
+          email: updatedUser.email || '',
+          role: user.role || '', // Keep role from original user data
+          phone: updatedUser.profile?.phone || '',
+          dateOfBirth: updatedUser.profile?.dateOfBirth ? new Date(updatedUser.profile.dateOfBirth).toISOString().split('T')[0] : ''
+        };
+        
+        setProfileData(updatedData);
+        setEditData(updatedData);
+        
+        // Update localStorage with full name
+        localStorage.setItem('userName', `${updatedData.firstName} ${updatedData.lastName}`.trim());
+        localStorage.setItem('userEmail', updatedData.email);
+        
+        setIsEditing(false);
+        toast.success('Profile updated successfully!');
+        
+        // Refetch to get latest data
+        refetch();
+      }
+    } catch (err) {
+      console.error('Update error:', err);
+      toast.error('Failed to update profile: ' + (err.message || 'Unknown error'));
+    }
   };
 
   const handleCancel = () => {
@@ -40,18 +110,90 @@ const Profile = () => {
     }));
   };
 
+  // Show loading state
+  if (loading) {
+    return (
+      <div style={{ 
+        padding: '25px', 
+        display: 'flex', 
+        justifyContent: 'center', 
+        alignItems: 'center',
+        minHeight: '400px'
+      }}>
+        <div style={{
+          padding: '20px',
+          backgroundColor: '#f8f9fa',
+          borderRadius: '10px',
+          textAlign: 'center'
+        }}>
+          <div style={{
+            width: '40px',
+            height: '40px',
+            border: '4px solid #5F9EA0',
+            borderTop: '4px solid transparent',
+            borderRadius: '50%',
+            animation: 'spin 1s linear infinite',
+            margin: '0 auto 10px'
+          }}></div>
+          <p>Loading profile...</p>
+        </div>
+      </div>
+    );
+  }
+
+  // Show error state
+  if (error && !data) {
+    return (
+      <div style={{ padding: '25px' }}>
+        <div style={{
+          padding: '20px',
+          backgroundColor: '#fee',
+          borderRadius: '10px',
+          border: '1px solid #fcc'
+        }}>
+          <h3 style={{ color: '#c66', margin: '0 0 10px 0' }}>Error Loading Profile</h3>
+          <p style={{ margin: '0 0 15px 0' }}>
+            {error.message || 'Failed to load profile data'}
+          </p>
+          <button
+            onClick={() => refetch()}
+            style={{
+              padding: '10px 20px',
+              backgroundColor: '#5F9EA0',
+              color: 'white',
+              border: 'none',
+              borderRadius: '5px',
+              cursor: 'pointer'
+            }}
+          >
+            Retry
+          </button>
+        </div>
+      </div>
+    );
+  }
+
+  // Profile fields configuration
   const profileFields = [
-    { key: 'name', label: 'Full Name', type: 'text', editable: true },
+    { key: 'firstName', label: 'First Name', type: 'text', editable: true },
+    { key: 'lastName', label: 'Last Name', type: 'text', editable: true },
     { key: 'email', label: 'Email Address', type: 'email', editable: true },
     { key: 'role', label: 'Role', type: 'text', editable: false },
-    { key: 'department', label: 'Department', type: 'text', editable: true },
     { key: 'phone', label: 'Phone Number', type: 'tel', editable: true },
-    { key: 'joinDate', label: 'Join Date', type: 'date', editable: false },
-    { key: 'lastLogin', label: 'Last Login', type: 'text', editable: false }
+    { key: 'dateOfBirth', label: 'Date of Birth', type: 'date', editable: true }
   ];
 
   return (
     <div style={{ padding: '25px' }}>
+      <style>
+        {`
+          @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+          }
+        `}
+      </style>
+      
       {/* Header */}
       <div style={{
         display: 'flex',
@@ -74,34 +216,44 @@ const Profile = () => {
             fontSize: '16px'
           }}>
             Manage your account information and preferences
+            {user && (
+              <span style={{ color: '#5F9EA0', fontWeight: '500' }}>
+                {' '} • Data from GraphQL
+              </span>
+            )}
           </p>
         </div>
         
         {!isEditing ? (
           <button
             onClick={handleEdit}
+            disabled={!user}
             style={{
               padding: '12px 20px',
-              backgroundColor: '#4682B4',
+              backgroundColor: user ? '#4682B4' : '#ccc',
               color: 'white',
               border: 'none',
               borderRadius: '8px',
-              cursor: 'pointer',
+              cursor: user ? 'pointer' : 'not-allowed',
               fontSize: '14px',
               fontWeight: '600',
               display: 'flex',
               alignItems: 'center',
               gap: '8px',
-              boxShadow: '0 2px 8px rgba(70, 130, 180, 0.3)',
+              boxShadow: user ? '0 2px 8px rgba(70, 130, 180, 0.3)' : 'none',
               transition: 'all 0.2s ease'
             }}
             onMouseEnter={(e) => {
-              e.target.style.backgroundColor = '#3a6b8a';
-              e.target.style.transform = 'translateY(-2px)';
+              if (user) {
+                e.target.style.backgroundColor = '#3a6b8a';
+                e.target.style.transform = 'translateY(-2px)';
+              }
             }}
             onMouseLeave={(e) => {
-              e.target.style.backgroundColor = '#4682B4';
-              e.target.style.transform = 'translateY(0)';
+              if (user) {
+                e.target.style.backgroundColor = '#4682B4';
+                e.target.style.transform = 'translateY(0)';
+              }
             }}
           >
             <span>✏️</span>
@@ -122,14 +274,6 @@ const Profile = () => {
                 fontWeight: '600',
                 transition: 'all 0.2s ease'
               }}
-              onMouseEnter={(e) => {
-                e.target.style.backgroundColor = '#f57c00';
-                e.target.style.transform = 'translateY(-1px)';
-              }}
-              onMouseLeave={(e) => {
-                e.target.style.backgroundColor = '#FF9800';
-                e.target.style.transform = 'translateY(0)';
-              }}
             >
               Cancel
             </button>
@@ -145,14 +289,6 @@ const Profile = () => {
                 fontSize: '14px',
                 fontWeight: '600',
                 transition: 'all 0.2s ease'
-              }}
-              onMouseEnter={(e) => {
-                e.target.style.backgroundColor = '#4a8a8c';
-                e.target.style.transform = 'translateY(-1px)';
-              }}
-              onMouseLeave={(e) => {
-                e.target.style.backgroundColor = '#5F9EA0';
-                e.target.style.transform = 'translateY(0)';
               }}
             >
               Save Changes
@@ -199,7 +335,7 @@ const Profile = () => {
             fontSize: '20px',
             fontWeight: '600'
           }}>
-            {profileData.name}
+            {profileData.name || 'Loading...'}
           </h3>
           
           <p style={{
@@ -207,24 +343,36 @@ const Profile = () => {
             color: '#6c757d',
             fontSize: '14px'
           }}>
-            {profileData.email}
+            {profileData.email || 'Loading...'}
           </p>
           
           <div style={{
             padding: '8px 16px',
-            backgroundColor: '#e8f5e8',
+            backgroundColor: user ? '#e8f5e8' : '#f0f0f0',
             borderRadius: '20px',
-            border: '1px solid #4CAF50',
+            border: `1px solid ${user ? '#4CAF50' : '#ccc'}`,
             display: 'inline-block'
           }}>
             <span style={{
-              color: '#2e7d32',
+              color: user ? '#2e7d32' : '#666',
               fontSize: '12px',
               fontWeight: '600'
             }}>
-              {profileData.role}
+              {profileData.role || 'Loading...'}
             </span>
           </div>
+
+          {user?.profile?.address?.country && (
+            <div style={{ marginTop: '15px' }}>
+              <p style={{
+                margin: 0,
+                color: '#6c757d',
+                fontSize: '12px'
+              }}>
+                📍 {user.profile.address.country}
+              </p>
+            </div>
+          )}
         </div>
 
         {/* Profile Details */}
@@ -263,12 +411,17 @@ const Profile = () => {
                   fontWeight: '500'
                 }}>
                   {field.label}
+                  {field.key === 'name' || field.key === 'email' || field.key === 'department' ? (
+                    <span style={{ color: '#5F9EA0', fontSize: '12px', marginLeft: '5px' }}>
+                      (From GraphQL)
+                    </span>
+                  ) : null}
                 </label>
                 
                 {isEditing && field.editable ? (
                   <input
                     type={field.type}
-                    value={editData[field.key]}
+                    value={editData[field.key] || ''}
                     onChange={(e) => handleInputChange(field.key, e.target.value)}
                     style={{
                       width: '100%',
@@ -298,7 +451,7 @@ const Profile = () => {
                     color: '#2c3e50',
                     border: '2px solid #e9ecef'
                   }}>
-                    {profileData[field.key]}
+                    {profileData[field.key] || 'Not specified'}
                   </div>
                 )}
               </div>
@@ -335,10 +488,26 @@ const Profile = () => {
           gap: '15px'
         }}>
           {[
-            { action: 'Profile Updated', time: '2 hours ago', icon: '✏️' },
-            { action: 'Last Login', time: '1 day ago', icon: '🔐' },
-            { action: 'Password Changed', time: '1 week ago', icon: '🔑' },
-            { action: 'Account Created', time: '1 month ago', icon: '👤' }
+            { 
+              action: 'Profile Loaded from GraphQL', 
+              time: user ? 'Just now' : 'Loading...', 
+              icon: '🔄' 
+            },
+            { 
+              action: 'Last GraphQL Login', 
+              time: profileData.lastLogin || 'Loading...', 
+              icon: '🔐' 
+            },
+            { 
+              action: 'Profile Data Synced', 
+              time: '2 minutes ago', 
+              icon: '✅' 
+            },
+            { 
+              action: 'Account Connected', 
+              time: '1 day ago', 
+              icon: '🔗' 
+            }
           ].map((activity, index) => (
             <div
               key={index}
