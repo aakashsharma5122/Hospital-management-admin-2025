@@ -4,8 +4,6 @@ import { toast } from 'react-toastify';
 import { USER_PROFILE_QUERY } from '../Graphql/query/UserProfileQuery';
 import { USER_PROFILE_MUTATION } from '../Graphql/mutations/userProfilemutation';
 
-// Update profile mutation
-
 const Profile = () => {
   const [isEditing, setIsEditing] = useState(false);
   
@@ -32,7 +30,6 @@ const Profile = () => {
 
   const [editData, setEditData] = useState({ ...profileData });
 
-  // Update local state when GraphQL data loads
   // Update local state when GraphQL data loads
   useEffect(() => {
     if (user) {
@@ -113,29 +110,10 @@ const Profile = () => {
   // Show loading state
   if (loading) {
     return (
-      <div style={{ 
-        padding: '25px', 
-        display: 'flex', 
-        justifyContent: 'center', 
-        alignItems: 'center',
-        minHeight: '400px'
-      }}>
-        <div style={{
-          padding: '20px',
-          backgroundColor: '#f8f9fa',
-          borderRadius: '10px',
-          textAlign: 'center'
-        }}>
-          <div style={{
-            width: '40px',
-            height: '40px',
-            border: '4px solid #5F9EA0',
-            borderTop: '4px solid transparent',
-            borderRadius: '50%',
-            animation: 'spin 1s linear infinite',
-            margin: '0 auto 10px'
-          }}></div>
-          <p>Loading profile...</p>
+      <div className="p-6 flex justify-center items-center min-h-96">
+        <div className="p-5 bg-gray-50 rounded-lg text-center">
+          <div className="w-10 h-10 border-4 border-teal-400 border-t-transparent rounded-full animate-spin mx-auto mb-2"></div>
+          <p className="text-gray-600">Loading profile...</p>
         </div>
       </div>
     );
@@ -144,27 +122,15 @@ const Profile = () => {
   // Show error state
   if (error && !data) {
     return (
-      <div style={{ padding: '25px' }}>
-        <div style={{
-          padding: '20px',
-          backgroundColor: '#fee',
-          borderRadius: '10px',
-          border: '1px solid #fcc'
-        }}>
-          <h3 style={{ color: '#c66', margin: '0 0 10px 0' }}>Error Loading Profile</h3>
-          <p style={{ margin: '0 0 15px 0' }}>
+      <div className="p-6">
+        <div className="p-5 bg-red-50 rounded-lg border border-red-200">
+          <h3 className="text-red-600 mb-2 font-semibold">Error Loading Profile</h3>
+          <p className="mb-4 text-gray-700">
             {error.message || 'Failed to load profile data'}
           </p>
           <button
             onClick={() => refetch()}
-            style={{
-              padding: '10px 20px',
-              backgroundColor: '#5F9EA0',
-              color: 'white',
-              border: 'none',
-              borderRadius: '5px',
-              cursor: 'pointer'
-            }}
+            className="px-5 py-2 bg-teal-500 text-white border-none rounded cursor-pointer hover:bg-teal-600 transition-colors"
           >
             Retry
           </button>
@@ -184,37 +150,14 @@ const Profile = () => {
   ];
 
   return (
-    <div style={{ padding: '25px' }}>
-      <style>
-        {`
-          @keyframes spin {
-            0% { transform: rotate(0deg); }
-            100% { transform: rotate(360deg); }
-          }
-        `}
-      </style>
-      
+    <div className="p-6 font-inter">
       {/* Header */}
-      <div style={{
-        display: 'flex',
-        justifyContent: 'space-between',
-        alignItems: 'center',
-        marginBottom: '30px'
-      }}>
+      <div className="flex justify-between items-center mb-8">
         <div>
-          <h1 style={{
-            color: '#2c3e50',
-            margin: '0 0 8px 0',
-            fontSize: '28px',
-            fontWeight: '700'
-          }}>
+          <h1 className="text-slate-800 mb-2 text-3xl font-bold">
             User Profile
           </h1>
-          <p style={{
-            margin: 0,
-            color: '#7f8c8d',
-            fontSize: '16px'
-          }}>
+          <p className="text-gray-500 text-base">
             Manage your account information and preferences
           </p>
         </div>
@@ -223,68 +166,26 @@ const Profile = () => {
           <button
             onClick={handleEdit}
             disabled={!user}
-            style={{
-              padding: '12px 20px',
-              backgroundColor: user ? '#4682B4' : '#ccc',
-              color: 'white',
-              border: 'none',
-              borderRadius: '8px',
-              cursor: user ? 'pointer' : 'not-allowed',
-              fontSize: '14px',
-              fontWeight: '600',
-              display: 'flex',
-              alignItems: 'center',
-              gap: '8px',
-              boxShadow: user ? '0 2px 8px rgba(70, 130, 180, 0.3)' : 'none',
-              transition: 'all 0.2s ease'
-            }}
-            onMouseEnter={(e) => {
-              if (user) {
-                e.target.style.backgroundColor = '#3a6b8a';
-                e.target.style.transform = 'translateY(-2px)';
-              }
-            }}
-            onMouseLeave={(e) => {
-              if (user) {
-                e.target.style.backgroundColor = '#4682B4';
-                e.target.style.transform = 'translateY(0)';
-              }
-            }}
+            className={`px-5 py-3 text-white border-none rounded-lg text-sm font-semibold flex items-center gap-2 transition-all duration-200 ${
+              user 
+                ? 'bg-blue-600 hover:bg-blue-700 hover:-translate-y-0.5 shadow-lg shadow-blue-200 cursor-pointer' 
+                : 'bg-gray-400 cursor-not-allowed'
+            }`}
           >
             <span>✏️</span>
             Edit Profile
           </button>
         ) : (
-          <div style={{ display: 'flex', gap: '10px' }}>
+          <div className="flex gap-3">
             <button
               onClick={handleCancel}
-              style={{
-                padding: '12px 20px',
-                backgroundColor: '#FF9800',
-                color: 'white',
-                border: 'none',
-                borderRadius: '8px',
-                cursor: 'pointer',
-                fontSize: '14px',
-                fontWeight: '600',
-                transition: 'all 0.2s ease'
-              }}
+              className="px-5 py-3 bg-orange-500 text-white border-none rounded-lg text-sm font-semibold cursor-pointer hover:bg-orange-600 transition-all duration-200"
             >
               Cancel
             </button>
             <button
               onClick={handleSave}
-              style={{
-                padding: '12px 20px',
-                backgroundColor: '#5F9EA0',
-                color: 'white',
-                border: 'none',
-                borderRadius: '8px',
-                cursor: 'pointer',
-                fontSize: '14px',
-                fontWeight: '600',
-                transition: 'all 0.2s ease'
-              }}
+              className="px-5 py-3 bg-teal-500 text-white border-none rounded-lg text-sm font-semibold cursor-pointer hover:bg-teal-600 transition-all duration-200"
             >
               Save Changes
             </button>
@@ -293,77 +194,36 @@ const Profile = () => {
       </div>
 
       {/* Profile Content */}
-      <div style={{
-        display: 'grid',
-        gridTemplateColumns: '300px 1fr',
-        gap: '30px'
-      }}>
+      <div className="grid grid-cols-1 lg:grid-cols-[350px_1fr] gap-8 items-stretch">
         {/* Profile Card */}
-        <div style={{
-          backgroundColor: '#ffffff',
-          borderRadius: '15px',
-          padding: '30px',
-          boxShadow: '0 4px 12px rgba(0,0,0,0.08)',
-          border: '1px solid #e9ecef',
-          textAlign: 'center',
-          height: 'fit-content'
-        }}>
-          <div style={{
-            width: '120px',
-            height: '120px',
-            borderRadius: '50%',
-            backgroundColor: '#5F9EA0',
-            display: 'flex',
-            alignItems: 'center',
-            justifyContent: 'center',
-            margin: '0 auto 20px',
-            fontSize: '48px',
-            color: 'white',
-            boxShadow: '0 4px 12px rgba(95, 158, 160, 0.3)'
-          }}>
+        <div className="bg-white rounded-2xl p-8 shadow-lg border border-gray-200 text-center flex flex-col justify-center">
+          <div className="w-32 h-32 rounded-full bg-teal-500 flex items-center justify-center mx-auto mb-6 text-5xl text-white shadow-lg shadow-teal-200">
             👤
           </div>
           
-          <h3 style={{
-            margin: '0 0 8px 0',
-            color: '#2c3e50',
-            fontSize: '20px',
-            fontWeight: '600'
-          }}>
-            {profileData.firstName +" " +profileData.lastName || 'Loading...'}
+          <h3 className="mb-3 text-slate-800 text-xl font-semibold">
+            {profileData.firstName + " " + profileData.lastName || 'Loading...'}
           </h3>
           
-          <p style={{
-            margin: '0 0 15px 0',
-            color: '#6c757d',
-            fontSize: '14px'
-          }}>
+          <p className="mb-4 text-gray-500 text-base">
             {profileData.email || 'Loading...'}
           </p>
           
-          <div style={{
-            padding: '8px 16px',
-            backgroundColor: user ? '#e8f5e8' : '#f0f0f0',
-            borderRadius: '20px',
-            border: `1px solid ${user ? '#4CAF50' : '#ccc'}`,
-            display: 'inline-block'
-          }}>
-            <span style={{
-              color: user ? '#2e7d32' : '#666',
-              fontSize: '12px',
-              fontWeight: '600'
-            }}>
+          <div className={`px-4 py-2 rounded-full border inline-block ${
+            user 
+              ? 'bg-green-50 border-green-500' 
+              : 'bg-gray-100 border-gray-300'
+          }`}>
+            <span className={`text-sm font-semibold ${
+              user ? 'text-green-700' : 'text-gray-600'
+            }`}>
               {profileData.role || 'Loading...'}
             </span>
           </div>
 
           {user?.profile?.address?.country && (
-            <div style={{ marginTop: '15px' }}>
-              <p style={{
-                margin: 0,
-                color: '#6c757d',
-                fontSize: '12px'
-              }}>
+            <div className="mt-4">
+              <p className="text-gray-500 text-sm">
                 📍 {user.profile.address.country}
               </p>
             </div>
@@ -371,40 +231,16 @@ const Profile = () => {
         </div>
 
         {/* Profile Details */}
-        <div style={{
-          backgroundColor: '#ffffff',
-          borderRadius: '15px',
-          padding: '30px',
-          boxShadow: '0 4px 12px rgba(0,0,0,0.08)',
-          border: '1px solid #e9ecef'
-        }}>
-          <h3 style={{
-            margin: '0 0 25px 0',
-            color: '#2c3e50',
-            fontSize: '18px',
-            fontWeight: '600',
-            display: 'flex',
-            alignItems: 'center',
-            gap: '10px'
-          }}>
+        <div className="bg-white rounded-2xl p-8 shadow-lg border border-gray-200 flex flex-col">
+          <h3 className="mb-8 text-slate-800 text-xl font-semibold flex items-center gap-3">
             <span>📋</span>
             Profile Information
           </h3>
           
-          <div style={{
-            display: 'grid',
-            gridTemplateColumns: 'repeat(auto-fit, minmax(300px, 1fr))',
-            gap: '20px'
-          }}>
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-6 flex-1">
             {profileFields.map((field) => (
-              <div key={field.key}>
-                <label style={{
-                  display: 'block',
-                  marginBottom: '8px',
-                  color: '#2c3e50',
-                  fontSize: '14px',
-                  fontWeight: '500'
-                }}>
+              <div key={field.key} className="space-y-2">
+                <label className="block text-slate-700 text-sm font-medium">
                   {field.label}
                 </label>
                 
@@ -413,34 +249,15 @@ const Profile = () => {
                     type={field.type}
                     value={editData[field.key] || ''}
                     onChange={(e) => handleInputChange(field.key, e.target.value)}
-                    style={{
-                      width: '100%',
-                      padding: '10px 12px',
-                      border: '2px solid #e9ecef',
-                      borderRadius: '6px',
-                      fontSize: '14px',
-                      outline: 'none',
-                      transition: 'border-color 0.2s ease',
-                      backgroundColor: '#f8f9fa'
-                    }}
-                    onFocus={(e) => {
-                      e.target.style.borderColor = '#5F9EA0';
-                      e.target.style.backgroundColor = 'white';
-                    }}
-                    onBlur={(e) => {
-                      e.target.style.borderColor = '#e9ecef';
-                      e.target.style.backgroundColor = '#f8f9fa';
-                    }}
+                    className="w-full px-3 py-2.5 border border-gray-300 rounded-lg text-sm text-slate-800 outline-none transition-all duration-200 bg-white hover:border-gray-400 focus:border-blue-500 focus:ring-2 focus:ring-blue-100"
+                    placeholder={`Enter ${field.label.toLowerCase()}`}
                   />
                 ) : (
-                  <div style={{
-                    padding: '10px 12px',
-                    backgroundColor: field.editable ? '#f8f9fa' : '#e9ecef',
-                    borderRadius: '6px',
-                    fontSize: '14px',
-                    color: '#2c3e50',
-                    border: '2px solid #e9ecef'
-                  }}>
+                  <div className={`px-3 py-2.5 rounded-lg text-sm text-slate-800 border transition-all duration-200 ${
+                    field.editable 
+                      ? 'bg-gray-50 border-gray-200 hover:bg-gray-100' 
+                      : 'bg-gray-100 border-gray-300'
+                  }`}>
                     {profileData[field.key] || 'Not specified'}
                   </div>
                 )}

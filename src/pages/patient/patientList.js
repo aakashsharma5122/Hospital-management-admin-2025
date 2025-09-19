@@ -107,15 +107,13 @@ const PatientList = () => {
         value ? (
           <span
             href={`mailto:${value}`}
-            className="inline-block px-2 py-0.5 rounded text-xs font-medium bg-blue-50 text-blue-700"
+            className="inline-block rounded text-xs font-medium bg-blue-50 text-blue-700"
           >
             {value}
           </span>
         ) : '—'
       ),
     },
-    { key: 'city', label: 'City', sortable: true },
-    { key: 'country', label: 'Country', sortable: true },
     {
       key: 'bloodGroup',
       label: 'Blood Group',
@@ -166,19 +164,19 @@ const PatientList = () => {
         <div className="flex gap-2">
           <button
             onClick={() => handleEditPatient(row)}
-            className="px-3 py-2 bg-blue-600 text-white rounded text-xs font-medium inline-flex items-center gap-1 hover:bg-blue-700 border-none"
+            className="px-2 py-2 bg-blue-600 text-white rounded text-xs font-medium inline-flex items-center gap-1 hover:bg-blue-700 border-none"
           >
             <FaEdit />
           </button>
           <button
             onClick={() => handleDeletePatient(row.id)}
-            className="px-3 py-2 bg-red-500 text-white rounded text-xs font-medium inline-flex items-center gap-1 hover:bg-red-600 border-none"
+            className="px-2 py-2 bg-red-500 text-white rounded text-xs font-medium inline-flex items-center gap-1 hover:bg-red-600 border-none"
           >
             <FaTrash />
           </button>
           <button
             onClick={() => handleViewPatient(row)}
-            className="px-3 py-2 bg-blue-600 text-white rounded text-xs font-medium inline-flex items-center gap-1 hover:bg-blue-700 border-none"
+            className="px-2 py-2 bg-blue-600 text-white rounded text-xs font-medium inline-flex items-center gap-1 hover:bg-blue-700 border-none"
           >
             <FaEye />
           </button>

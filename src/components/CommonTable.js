@@ -99,14 +99,6 @@ const CommonTable = ({
         <p className="text-gray-500 m-0 mb-5">
           {error.message}
         </p>
-        {onRefresh && (
-          <button
-            onClick={onRefresh}
-            className="bg-[#5F9EA0] text-white px-5 py-2.5 rounded cursor-pointer text-sm transition-all duration-200 hover:bg-[#4a8a8c] hover:-translate-y-0.5"
-          >
-            Try Again
-          </button>
-        )}
       </div>
     );
   }
@@ -129,7 +121,7 @@ const CommonTable = ({
   return (
     <div className="bg-white rounded-lg shadow overflow-hidden">
       {/* Table Header */}
-      <div className="p-5 border-b border-gray-200 bg-gray-100">
+      <div className="p-5 border-b border-gray-200">
         <div className="flex flex-col gap-3 md:flex-row md:items-center md:justify-between">
           <h3 className="m-0 text-gray-700 text-lg font-semibold">
             {title}
@@ -142,7 +134,7 @@ const CommonTable = ({
                   value={searchTerm}
                   onChange={(e) => setSearchTerm(e.target.value)}
                   placeholder="Search..."
-                  className="w-64 rounded border border-gray-300 bg-white px-3 py-2 pr-8 text-sm focus:outline-none focus:ring-2 focus:ring-blue-300 border-none"
+                  className="w-64 rounded border border-gray-300 bg-white px-3 py-2 pr-8 text-sm focus:outline-none focus:ring-2 focus:ring-blue-300 focus:border-blue-500"
                 />
               </div>
             )}
@@ -158,79 +150,62 @@ const CommonTable = ({
                 ))}
               </select>
             </div>
-            {onRefresh && (
-              <button
-                onClick={onRefresh}
-                className="bg-green-600 text-white px-4 py-2 rounded text-sm flex items-center gap-1 transition-all duration-200 hover:bg-green-700 hover:-translate-y-0.5"
-              >
-                🔄 Refresh
-              </button>
-            )}
           </div>
         </div>
         <p className="m-0 mt-2 text-gray-500 text-sm">
           {totalItems} {totalItems === 1 ? 'item' : 'items'} found
         </p>
       </div>
-
-      {/* Table */}
-      <div className="overflow-x-auto">
-        <table className="w-full border-collapse text-sm">
-          <thead className="sticky top-0 z-10">
-            <tr className="bg-gray-100">
+      <div className="overflow-x-auto border border-gray-300 custom-scrollbar mx-3">
+      <table className="w-full text-xs border-collapse">
+        <thead className="bg-gray-200">
+          <tr>
+            {columns.map((column) => (
+              <th
+                key={column.key}
+                onClick={() => column.sortable && handleSort(column.key)}
+                className={
+                  `py-1 px-1 text-left font-semibold text-gray-700 select-none border border-gray-300 ` +
+                  (column.sortable ? 'cursor-pointer' : '')
+                }
+              >
+                <div className="flex items-center gap-1">
+                  {column.label}
+                  {column.sortable && (
+                    <span
+                      className="text-[8px] inline-flex items-center justify-center w-3 h-3 rounded bg-blue-100 text-blue-600"
+                      title="Click to sort"
+                    >
+                      {sortConfig.key === column.key
+                        ? (sortConfig.direction === 'asc' ? '↑' : '↓')
+                        : '↕'}
+                    </span>
+                  )}
+                </div>
+              </th>
+            ))}
+          </tr>
+        </thead>
+        <tbody>
+          {pageData.map((row, index) => (
+            <tr key={row.id || index}>
               {columns.map((column) => (
-                <th
+                <td
                   key={column.key}
-                  onClick={() => column.sortable && handleSort(column.key)}
-                  className={
-                    `py-4 px-3 text-left font-semibold text-gray-700 border-b-2 border-gray-200 select-none relative ` +
-                    (column.sortable ? 'cursor-pointer' : '')
-                  }
+                  className="py-1 px-1 text-gray-700 border border-gray-300 whitespace-nowrap"
                 >
-                  <div className="flex items-center gap-1.5">
-                    {column.label}
-                    {column.sortable && (
-                      <span
-                        className={
-                          `text-[10px] inline-flex items-center justify-center w-4 h-4 rounded bg-blue-100 text-blue-600 border border-blue-200`
-                        }
-                        title="Click to sort"
-                      >
-                        {sortConfig.key === column.key
-                          ? (sortConfig.direction === 'asc' ? '↑' : '↓')
-                          : '↕'}
-                      </span>
-                    )}
-                  </div>
-                </th>
+                  {column.render
+                    ? column.render(row[column.key], row)
+                    : row[column.key]}
+                </td>
               ))}
             </tr>
-          </thead>
-          <tbody>
-            {pageData.map((row, index) => (
-              <tr
-                key={row.id || index}
-                className="border-b border-gray-200 transition-colors hover:bg-gray-100 even:bg-gray-50"
-              >
-                {columns.map((column) => (
-                  <td
-                    key={column.key}
-                    className="p-3 text-gray-700 border-b border-gray-200"
-                  >
-                    {column.render 
-                      ? column.render(row[column.key], row)
-                      : row[column.key]
-                    }
-                  </td>
-                ))}
-              </tr>
-            ))}
-          </tbody>
-        </table>
+          ))}
+        </tbody>
+      </table>
       </div>
-
       {/* Footer / Pagination */}
-      <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3 p-4 bg-gray-50 border-t border-gray-200">
+      <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3 p-4 border border-gray-400">
         <div className="text-sm text-gray-600">
           Showing {totalItems === 0 ? 0 : startIdx + 1}-{Math.min(endIdx, totalItems)} of {totalItems}
         </div>
