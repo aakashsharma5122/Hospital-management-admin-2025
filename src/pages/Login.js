@@ -102,7 +102,7 @@ const [login] = useMutation(LOGIN_MUTATION);
         justifyContent: 'center',
         padding: '20px',
         position: 'relative'
-      }}>
+      }} className='font-inter'>
       <div style={{
         backgroundColor: 'rgba(255, 255, 255, 0.9)',
         borderRadius: '15px',

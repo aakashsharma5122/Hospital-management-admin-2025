@@ -4,6 +4,7 @@ import { useNavigate, useLocation } from 'react-router-dom';
 const Header = ({ onLogout }) => {
   const navigate = useNavigate();
   const location = useLocation();
+  const [showConfirm, setShowConfirm] = React.useState(false);
 
   const getPageTitle = () => {
     const path = location.pathname.substring(1);
@@ -145,7 +146,7 @@ const Header = ({ onLogout }) => {
 
         {/* Logout Button */}
         <button
-          onClick={onLogout}
+          onClick={() => setShowConfirm(true)}
           style={{
             padding: '8px 15px',
             backgroundColor: '#5F9EA0',
@@ -173,6 +174,62 @@ const Header = ({ onLogout }) => {
           Logout
         </button>
       </div>
+
+      {/* Confirm Logout Modal */}
+      {showConfirm && (
+        <div style={{
+          position: 'fixed',
+          inset: 0,
+          backgroundColor: 'rgba(0,0,0,0.4)',
+          display: 'flex',
+          alignItems: 'center',
+          justifyContent: 'center',
+          zIndex: 9999
+        }}>
+          <div style={{
+            backgroundColor: '#ffffff',
+            borderRadius: '12px',
+            width: '100%',
+            maxWidth: '420px',
+            padding: '20px',
+            boxShadow: '0 10px 25px rgba(0,0,0,0.15)',
+            border: '1px solid #e9ecef'
+          }}>
+            <h3 style={{ margin: 0, color: '#2c3e50', fontSize: '18px', fontWeight: 700 }}>Confirm Logout</h3>
+            <p style={{ margin: '10px 0 20px 0', color: '#6b7280', fontSize: '14px' }}>Are you sure you want to logout?</p>
+            <div style={{ display: 'flex', justifyContent: 'flex-end', gap: '10px' }}>
+              <button
+                onClick={() => setShowConfirm(false)}
+                style={{
+                  padding: '8px 14px',
+                  backgroundColor: '#f3f4f6',
+                  color: '#374151',
+                  border: '1px solid #e5e7eb',
+                  borderRadius: '6px',
+                  cursor: 'pointer',
+                  fontWeight: 500
+                }}
+              >
+                Cancel
+              </button>
+              <button
+                onClick={() => { setShowConfirm(false); onLogout && onLogout(); }}
+                style={{
+                  padding: '8px 14px',
+                  backgroundColor: '#ef4444',
+                  color: '#ffffff',
+                  border: 'none',
+                  borderRadius: '6px',
+                  cursor: 'pointer',
+                  fontWeight: 600
+                }}
+              >
+                Logout
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
     </div>
   );
 };
