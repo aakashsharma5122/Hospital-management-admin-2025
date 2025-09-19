@@ -12,106 +12,13 @@ const Sidebar = ({ activeTab, setActiveTab }) => {
 
   const menuItems = [
     { id: 'dashboard', label: 'Dashboard', icon: '📊', type: 'single' },
-    // { 
-    //   id: 'patients', 
-    //   label: 'Patient Management', 
-    //   icon: '🏥', 
-    //   type: 'submenu',
-    //   subItems: [
-    //     { id: 'patient-list', label: 'Patient List', icon: '👥' },
-    //     { id: 'patient-registration', label: 'New Registration', icon: '📝' },
-    //     { id: 'patient-history', label: 'Medical History', icon: '📋' }
-    //   ]
-    // },
     { 
-      id: 'doctors', 
+      id: 'doctor-list', 
       label: 'Doctor Management', 
       icon: '👨‍⚕️', 
-      type: 'submenu',
-      subItems: [
-        { id: 'doctor-list', label: 'Doctor List', icon: '👨‍⚕️' },
-
-      ]
+      type: 'single',
     },
-    // { 
-    //   id: 'staff', 
-    //   label: 'Staff Management', 
-    //   icon: '👩‍💼', 
-    //   type: 'submenu',
-    //   subItems: [
-    //     { id: 'nursing-staff', label: 'Nursing Staff', icon: '👩‍⚕️' },
-    //     { id: 'cleaning-staff', label: 'Cleaning Staff', icon: '🧹' },
-    //     { id: 'security-staff', label: 'Security Staff', icon: '🛡️' },
-    //     { id: 'admin-staff', label: 'Admin Staff', icon: '👨‍💼' }
-    //   ]
-    // },
-    // { 
-    //   id: 'pharmacy', 
-    //   label: 'Pharmacy', 
-    //   icon: '💊', 
-    //   type: 'submenu',
-    //   subItems: [
-    //     { id: 'medicine-inventory', label: 'Medicine Inventory', icon: '💊' },
-    //     { id: 'prescriptions', label: 'Prescriptions', icon: '📋' },
-    //     { id: 'suppliers', label: 'Suppliers', icon: '🚚' }
-    //   ]
-    // },
-    // { 
-    //   id: 'appointments', 
-    //   label: 'Appointments', 
-    //   icon: '📅', 
-    //   type: 'submenu',
-    //   subItems: [
-    //     { id: 'appointment-list', label: 'All Appointments', icon: '📅' },
-    //     { id: 'appointment-booking', label: 'Book Appointment', icon: '➕' },
-    //     { id: 'appointment-calendar', label: 'Calendar View', icon: '📆' }
-    //   ]
-    // },
-    // { 
-    //   id: 'billing', 
-    //   label: 'Billing & Finance', 
-    //   icon: '💰', 
-    //   type: 'submenu',
-    //   subItems: [
-    //     { id: 'patient-bills', label: 'Patient Bills', icon: '🧾' },
-    //     { id: 'insurance', label: 'Insurance', icon: '🛡️' },
-    //     { id: 'payments', label: 'Payments', icon: '💳' }
-    //   ]
-    // },
-    // { 
-    //   id: 'reports', 
-    //   label: 'Reports & Analytics', 
-    //   icon: '📊', 
-    //   type: 'submenu',
-    //   subItems: [
-    //     { id: 'patient-reports', label: 'Patient Reports', icon: '📈' },
-    //     { id: 'financial-reports', label: 'Financial Reports', icon: '💹' },
-    //     { id: 'staff-reports', label: 'Staff Reports', icon: '👥' }
-    //   ]
-    // },
-    // { 
-    //   id: 'inventory', 
-    //   label: 'Inventory Management', 
-    //   icon: '📦', 
-    //   type: 'submenu',
-    //   subItems: [
-    //     { id: 'medical-equipment', label: 'Medical Equipment', icon: '🩺' },
-    //     { id: 'hospital-supplies', label: 'Hospital Supplies', icon: '🏥' },
-    //     { id: 'maintenance', label: 'Maintenance', icon: '🔧' }
-    //   ]
-    // },
-    // { 
-    //   id: 'promotions', 
-    //   label: 'Promotions & Ads', 
-    //   icon: '📢', 
-    //   type: 'submenu',
-    //   subItems: [
-    //     { id: 'health-campaigns', label: 'Health Campaigns', icon: '🎯' },
-    //     { id: 'advertisements', label: 'Advertisements', icon: '📺' },
-    //     { id: 'events', label: 'Events', icon: '🎉' }
-    //   ]
-    // },
-    { id: 'settings', label: 'Settings', icon: '⚙️', type: 'single' }
+    { id: 'patient-list', label: 'Patients Management', icon: '👨‍⚕️', type: 'single' }
   ];
 
   return (
@@ -127,7 +34,7 @@ const Sidebar = ({ activeTab, setActiveTab }) => {
       zIndex: 1000,
       boxShadow: '2px 0 10px rgba(0,0,0,0.08)',
       overflowY: 'auto'
-    }}>
+    }} className='font-inter'>
       {/* Logo/Header */}
       <div style={{
         padding: '25px 20px',

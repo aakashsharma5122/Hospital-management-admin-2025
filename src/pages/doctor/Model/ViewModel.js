@@ -1,5 +1,5 @@
 import React from 'react';
-import { FaUser, FaEnvelope, FaPhone, FaGraduationCap, FaStethoscope, FaClock, FaUserMd, FaCalendarAlt, FaVenusMars } from 'react-icons/fa';
+import { FaUser, FaEnvelope, FaPhone, FaGraduationCap, FaStethoscope, FaClock, FaUserMd, FaVenusMars } from 'react-icons/fa';
 
 const ViewModel = ({ isOpen, onClose, doctor }) => {
   if (!isOpen || !doctor) return null;
@@ -258,7 +258,7 @@ const ViewModel = ({ isOpen, onClose, doctor }) => {
                 <span style={{ fontWeight: '500', color: '#64748b' }}>Type:</span>
                 <span style={{ 
                   fontWeight: '600', 
-                  color: '#1e293b',
+                  // color: '#1e293b',
                   backgroundColor: doctor.isSurgeon ? '#fef3c7' : '#e0e7ff',
                   color: doctor.isSurgeon ? '#92400e' : '#3730a3',
                   padding: '4px 8px',
@@ -308,7 +308,7 @@ const ViewModel = ({ isOpen, onClose, doctor }) => {
                 <span style={{ fontWeight: '500', color: '#64748b' }}>Status:</span>
                 <span style={{ 
                   fontWeight: '600', 
-                  color: '#1e293b',
+                  // color: '#1e293b',
                   backgroundColor: doctor.isActive ? '#dcfce7' : '#fee2e2',
                   color: doctor.isActive ? '#166534' : '#dc2626',
                   padding: '4px 8px',

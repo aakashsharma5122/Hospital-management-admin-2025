@@ -1,8 +1,8 @@
 import React, { useState, useEffect } from 'react';
 import { useMutation } from '@apollo/client';
 import { toast } from 'react-toastify';
-import { ADD_DOCTOR_MUTATION, UPDATE_DOCTOR_MUTATION } from '../../../Graphql/mutations/mutations/DoctorMutations/DoctorMutations';
-import { DOCTOR_QUERY } from '../../../Graphql/mutations/query/doctor/DoctorQuery';
+import { ADD_DOCTOR_MUTATION, UPDATE_DOCTOR_MUTATION } from '../../../Graphql/mutations/DoctorMutations';
+import { DOCTOR_QUERY } from '../../../Graphql/query/DoctorQuery';
 
 const AddEditDoctorModel = ({ isOpen, onClose, doctor = null, isEdit = false }) => {
   const [formData, setFormData] = useState({
@@ -85,7 +85,6 @@ const AddEditDoctorModel = ({ isOpen, onClose, doctor = null, isEdit = false }) 
     e.preventDefault();
     
     try {
-      // Convert numeric fields to numbers before sending
       const submitData = {
         ...formData,
         experiance: parseInt(formData.experiance, 10),
@@ -93,12 +92,10 @@ const AddEditDoctorModel = ({ isOpen, onClose, doctor = null, isEdit = false }) 
       };
       
       if (isEdit && doctor) {
-        console.log('Doctor ID:', doctor.id); // Debug log
-        console.log('Submit Data:', submitData); // Debug log
-        
+
         await updateDoctor({
           variables: {
-            updateDoctorId: doctor.id,  // Changed from 'id' to 'updateDoctorId'
+            updateDoctorId: doctor.id, 
             input: submitData
           }
         });
@@ -205,6 +202,7 @@ const AddEditDoctorModel = ({ isOpen, onClose, doctor = null, isEdit = false }) 
               <input
                 type="text"
                 name="firstName"
+                placeholder='Enter First Name'
                 value={formData.firstName}
                 onChange={handleInputChange}
                 required
@@ -235,6 +233,7 @@ const AddEditDoctorModel = ({ isOpen, onClose, doctor = null, isEdit = false }) 
               <input
                 type="text"
                 name="lastName"
+                placeholder='Enter Last Name'
                 value={formData.lastName}
                 onChange={handleInputChange}
                 required
@@ -265,6 +264,7 @@ const AddEditDoctorModel = ({ isOpen, onClose, doctor = null, isEdit = false }) 
               <input
                 type="number"
                 name="age"
+                placeholder='Enter Age'
                 value={formData.age}
                 onChange={handleInputChange}
                 required
@@ -296,6 +296,7 @@ const AddEditDoctorModel = ({ isOpen, onClose, doctor = null, isEdit = false }) 
               </label>
               <select
                 name="gender"
+                placeholder='gender'
                 value={formData.gender}
                 onChange={handleInputChange}
                 required
@@ -332,6 +333,7 @@ const AddEditDoctorModel = ({ isOpen, onClose, doctor = null, isEdit = false }) 
               <input
                 type="email"
                 name="email"
+                placeholder='Enter Email'
                 value={formData.email}
                 onChange={handleInputChange}
                 required
@@ -362,6 +364,7 @@ const AddEditDoctorModel = ({ isOpen, onClose, doctor = null, isEdit = false }) 
               <input
                 type="tel"
                 name="phoneNumber"
+                placeholder='Enter Phone Number'
                 value={formData.phoneNumber}
                 onChange={handleInputChange}
                 required

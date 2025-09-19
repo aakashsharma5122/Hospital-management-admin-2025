@@ -1,8 +1,8 @@
 import React, { useState, useEffect } from 'react';
 import { useQuery, useMutation } from '@apollo/client';
 import { toast } from 'react-toastify';
-import { USER_PROFILE_QUERY } from '../Graphql/mutations/query/UserProfileQuery';
-import { USER_PROFILE_MUTATION } from '../Graphql/mutations/mutations/userProfilemutation';
+import { USER_PROFILE_QUERY } from '../Graphql/query/UserProfileQuery';
+import { USER_PROFILE_MUTATION } from '../Graphql/mutations/userProfilemutation';
 
 // Update profile mutation
 
@@ -216,11 +216,6 @@ const Profile = () => {
             fontSize: '16px'
           }}>
             Manage your account information and preferences
-            {user && (
-              <span style={{ color: '#5F9EA0', fontWeight: '500' }}>
-                {' '} • Data from GraphQL
-              </span>
-            )}
           </p>
         </div>
         
@@ -335,7 +330,7 @@ const Profile = () => {
             fontSize: '20px',
             fontWeight: '600'
           }}>
-            {profileData.name || 'Loading...'}
+            {profileData.firstName +" " +profileData.lastName || 'Loading...'}
           </h3>
           
           <p style={{
@@ -411,11 +406,6 @@ const Profile = () => {
                   fontWeight: '500'
                 }}>
                   {field.label}
-                  {field.key === 'name' || field.key === 'email' || field.key === 'department' ? (
-                    <span style={{ color: '#5F9EA0', fontSize: '12px', marginLeft: '5px' }}>
-                      (From GraphQL)
-                    </span>
-                  ) : null}
                 </label>
                 
                 {isEditing && field.editable ? (
@@ -457,94 +447,6 @@ const Profile = () => {
               </div>
             ))}
           </div>
-        </div>
-      </div>
-
-      {/* Activity Section */}
-      <div style={{
-        backgroundColor: '#ffffff',
-        borderRadius: '15px',
-        padding: '30px',
-        marginTop: '30px',
-        boxShadow: '0 4px 12px rgba(0,0,0,0.08)',
-        border: '1px solid #e9ecef'
-      }}>
-        <h3 style={{
-          margin: '0 0 20px 0',
-          color: '#2c3e50',
-          fontSize: '18px',
-          fontWeight: '600',
-          display: 'flex',
-          alignItems: 'center',
-          gap: '10px'
-        }}>
-          <span>📊</span>
-          Recent Activity
-        </h3>
-        
-        <div style={{
-          display: 'grid',
-          gridTemplateColumns: 'repeat(auto-fit, minmax(250px, 1fr))',
-          gap: '15px'
-        }}>
-          {[
-            { 
-              action: 'Profile Loaded from GraphQL', 
-              time: user ? 'Just now' : 'Loading...', 
-              icon: '🔄' 
-            },
-            { 
-              action: 'Last GraphQL Login', 
-              time: profileData.lastLogin || 'Loading...', 
-              icon: '🔐' 
-            },
-            { 
-              action: 'Profile Data Synced', 
-              time: '2 minutes ago', 
-              icon: '✅' 
-            },
-            { 
-              action: 'Account Connected', 
-              time: '1 day ago', 
-              icon: '🔗' 
-            }
-          ].map((activity, index) => (
-            <div
-              key={index}
-              style={{
-                padding: '15px',
-                backgroundColor: '#f8f9fa',
-                borderRadius: '8px',
-                border: '1px solid #e9ecef',
-                display: 'flex',
-                alignItems: 'center',
-                gap: '12px'
-              }}
-            >
-              <div style={{
-                fontSize: '20px'
-              }}>
-                {activity.icon}
-              </div>
-              <div>
-                <p style={{
-                  margin: '0 0 4px 0',
-                  color: '#2c3e50',
-                  fontSize: '14px',
-                  fontWeight: '500'
-                }}>
-                  {activity.action}
-                </p>
-                <p style={{
-                  margin: 0,
-                  color: '#6c757d',
-                  fontSize: '12px'
-                }}>
-                  {activity.time}
-                </p>
-              </div>
-            </div>
-          ))}
         </div>
       </div>
     </div>

@@ -40,7 +40,8 @@ const Header = ({ onLogout }) => {
       justifyContent: 'space-between',
       alignItems: 'center',
       boxShadow: '0 2px 4px rgba(0,0,0,0.05)'
-    }}>
+
+    }} className='font-inter'>
       <div>
         <div style={{
           display: 'flex',

@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { toast, ToastContainer } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
-import { LOGIN_MUTATION } from '../Graphql/mutations/mutations/loginmutations';
+import { LOGIN_MUTATION } from '../Graphql/mutations/loginmutations';
 import { useMutation } from '@apollo/client';
 
 const Login = ({ onLogin }) => {

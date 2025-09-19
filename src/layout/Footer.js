@@ -8,7 +8,7 @@ const Footer = () => {
       padding: '20px 25px',
       marginTop: 'auto',
       boxShadow: '0 -2px 4px rgba(0,0,0,0.05)'
-    }}>
+    }} className='font-inter'>
       <div style={{
         display: 'flex',
         justifyContent: 'space-between',

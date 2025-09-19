@@ -2,10 +2,10 @@ import React, { useState, useEffect } from 'react';
 import { toast } from 'react-toastify';
 import { useMutation } from '@apollo/client';
 import { FaEdit, FaTrash, FaToggleOn, FaToggleOff, FaEye } from 'react-icons/fa';
-import CommonTable from '../CommonTable';
+import CommonTable from '../../components/CommonTable';
 import { useQuery } from '@apollo/client';
-import { DOCTOR_QUERY } from '../../Graphql/mutations/query/doctor/DoctorQuery';
-import { DELETE_DOCTOR_MUTATION, TOGGLE_DOCTOR_STATUS_MUTATION } from '../../Graphql/mutations/mutations/DoctorMutations/DoctorMutations';
+import { DOCTOR_QUERY } from '../../Graphql/query/DoctorQuery';
+import { DELETE_DOCTOR_MUTATION, TOGGLE_DOCTOR_STATUS_MUTATION } from '../../Graphql/mutations/DoctorMutations';
 import AddEditDoctorModel from './Model/AddEditDoctorModel';
 import ViewModel from './Model/ViewModel';
 
@@ -76,7 +76,7 @@ const DoctorList = () => {
       await toggleDoctorStatus({
         variables: { 
           setDoctorStatusId: doctorId,
-          isActive: !currentStatus  // Toggle the current status
+          isActive: !currentStatus
         }
       });
     } catch (error) {
@@ -109,7 +109,7 @@ const DoctorList = () => {
       label: 'Doctor Name',
       sortable: true,
       render: (value, row) => (
-        <span style={{ fontWeight: '600', color: '#2c3e50' }}>
+        <span className="font-semibold text-gray-800">
           {row.firstName} {row.lastName}
         </span>
       )
@@ -124,32 +124,22 @@ const DoctorList = () => {
       key: 'gender',
       label: 'Gender',
       sortable: true,
-      render: (value) => (
-        <span style={{
-          padding: '4px 8px',
-          borderRadius: '12px',
-          fontSize: '12px',
-          fontWeight: '500',
-          backgroundColor: value === 'Male' ? '#e3f2fd' : '#fce4ec',
-          color: value === 'Male' ? '#1976d2' : '#c2185b'
-        }}>
-          {value}
-        </span>
-      )
+      render: (value) => {
+        const normalized = (value || '').toLowerCase();
+        const isMale = normalized === 'male';
+        return (
+          <span className={`px-2 py-1 rounded-full text-xs font-medium ${isMale ? 'bg-blue-100 text-blue-700' : 'bg-pink-100 text-pink-700'}`}>
+            {value}
+          </span>
+        );
+      }
     },
     {
       key: 'email',
       label: 'Email',
       sortable: true,
       render: (value) => (
-        <span style={{
-          padding: '4px 8px',
-          borderRadius: '12px',
-          fontSize: '12px',
-          fontWeight: '500',
-          backgroundColor: '#e3f2fd',
-          color: '#1976d2'
-        }}>
+        <span className="px-2 py-1 rounded text-xs font-medium bg-blue-50 text-blue-700">
           {value}
         </span>
       )
@@ -164,14 +154,7 @@ const DoctorList = () => {
       label: 'Specialization',
       sortable: true,
       render: (value) => (
-        <span style={{
-          padding: '4px 8px',
-          borderRadius: '6px',
-          fontSize: '12px',
-          fontWeight: '500',
-          backgroundColor: '#e8f5e8',
-          color: '#2e7d32'
-        }}>
+        <span className="px-2 py-1 rounded text-xs font-medium bg-emerald-50 text-emerald-700">
           {value}
         </span>
       )
@@ -181,14 +164,7 @@ const DoctorList = () => {
       label: 'Qualification',
       sortable: true,
       render: (value) => (
-        <span style={{
-          padding: '4px 8px',
-          borderRadius: '6px',
-          fontSize: '12px',
-          fontWeight: '500',
-          backgroundColor: '#fff3e0',
-          color: '#f57c00'
-        }}>
+        <span className="px-2 py-1 rounded text-xs font-medium bg-orange-50 text-orange-700">
           {value}
         </span>
       )
@@ -204,14 +180,7 @@ const DoctorList = () => {
       label: 'Shift',
       sortable: true,
       render: (value) => (
-        <span style={{
-          padding: '4px 8px',
-          borderRadius: '6px',
-          fontSize: '12px',
-          fontWeight: '500',
-          backgroundColor: '#f3e5f5',
-          color: '#7b1fa2'
-        }}>
+        <span className="px-2 py-1 rounded text-xs font-medium bg-purple-50 text-purple-700">
           {value}
         </span>
       )
@@ -221,14 +190,7 @@ const DoctorList = () => {
       label: 'Type',
       sortable: true,
       render: (value) => (
-        <span style={{
-          padding: '4px 8px',
-          borderRadius: '12px',
-          fontSize: '12px',
-          fontWeight: '500',
-          backgroundColor: value ? '#e8f5e8' : '#fff3e0',
-          color: value ? '#2e7d32' : '#f57c00'
-        }}>
+        <span className={`px-2 py-1 rounded-full text-xs font-medium ${value ? 'bg-emerald-50 text-emerald-700' : 'bg-orange-50 text-orange-700'}`}>
           {value ? 'Surgeon' : 'General'}
         </span>
       )
@@ -240,26 +202,7 @@ const DoctorList = () => {
       render: (value, row) => (
         <button
           onClick={() => handleToggleStatus(row.id, value)}
-          style={{
-            padding: '4px 8px',
-            borderRadius: '12px',
-            fontSize: '12px',
-            fontWeight: '500',
-            backgroundColor: value ? '#e8f5e8' : '#ffebee',
-            color: value ? '#2e7d32' : '#c62828',
-            border: 'none',
-            cursor: 'pointer',
-            display: 'flex',
-            alignItems: 'center',
-            gap: '4px',
-            transition: 'all 0.2s ease'
-          }}
-        //   onMouseEnter={(e) => {
-        //     e.target.style.transform = 'scale(1.05)';
-        //   }}
-        //   onMouseLeave={(e) => {
-        //     e.target.style.transform = 'scale(1)';
-        //   }}
+          className={`px-2 py-1 rounded-full text-xs font-medium inline-flex items-center gap-1 border-none ${value ? 'bg-emerald-50 text-emerald-700' : 'bg-rose-50 text-rose-700'}`}
         >
           {value ? <FaToggleOn /> : <FaToggleOff />}
           {value ? 'Active' : 'Inactive'}
@@ -271,64 +214,22 @@ const DoctorList = () => {
       label: 'Actions',
       sortable: false,
       render: (value, row) => (
-        <div style={{ display: 'flex', gap: '8px' }}>
+        <div className="flex gap-2">
           <button
             onClick={() => handleEditDoctor(row)}
-            style={{
-              padding: '8px 12px',
-              backgroundColor: '#3b82f6',
-              color: 'white',
-              border: 'none',
-              borderRadius: '6px',
-              cursor: 'pointer',
-              fontSize: '12px',
-              fontWeight: '500',
-              display: 'flex',
-              alignItems: 'center',
-              gap: '4px',
-            //   transition: 'all 0.2s ease'
-            }}
-          
+            className="px-3 py-2 bg-blue-600 text-white rounded text-xs font-medium inline-flex items-center gap-1 hover:bg-blue-700 border-none"
           >
             <FaEdit />
-            
           </button>
           <button
             onClick={() => handleDeleteDoctor(row.id)}
-            style={{
-              padding: '8px 12px',
-              backgroundColor: '#ef4444',
-              color: 'white',
-              border: 'none',
-              borderRadius: '6px',
-              cursor: 'pointer',
-              fontSize: '12px',
-              fontWeight: '500',
-              display: 'flex',
-              alignItems: 'center',
-              gap: '4px',
-            //   transition: 'all 0.2s ease'
-            }}
-          
+            className="px-3 py-2 bg-red-500 text-white rounded text-xs font-medium inline-flex items-center gap-1 hover:bg-red-600 border-none"
           >
             <FaTrash />
           </button>
           <button
             onClick={() => handleViewDoctor(row.id)}
-            style={{
-              padding: '8px 12px',
-              backgroundColor: '#3b82f6',
-              color: 'white',
-              border: 'none',
-              borderRadius: '6px',
-              cursor: 'pointer',
-              fontSize: '12px',
-              fontWeight: '500',
-              display: 'flex',
-              alignItems: 'center',
-              gap: '4px',
-            //   transition: 'all 0.2s ease'
-            }}
+            className="px-3 py-2 bg-blue-600 text-white rounded text-xs font-medium inline-flex items-center gap-1 hover:bg-blue-700 border-none"
           >
             <FaEye />
           </button>
@@ -338,50 +239,14 @@ const DoctorList = () => {
   ];
 
   return (
-    <div style={{ padding: '25px' }}>
-      <div style={{
-        display: 'flex',
-        justifyContent: 'space-between',
-        alignItems: 'center',
-        marginBottom: '20px'
-      }}>
-        <h1 style={{
-          margin: 0,
-          fontSize: '28px',
-          fontWeight: '600',
-          color: '#1f2937'
-        }}>
-          Doctor Management
-        </h1>
+    <div className="p-6 font-inter">
+      <div className="flex items-center justify-between mb-5">
+        <h1 className="m-0 text-2xl font-semibold text-gray-800">Doctor Management</h1>
         <button
           onClick={handleAddDoctor}
-          style={{
-            padding: '12px 24px',
-            backgroundColor: '#10b981',
-            color: 'white',
-            border: 'none',
-            borderRadius: '8px',
-            fontSize: '14px',
-            fontWeight: '500',
-            cursor: 'pointer',
-            display: 'flex',
-            alignItems: 'center',
-            gap: '8px',
-            // transition: 'all 0.2s ease',
-            boxShadow: '0 4px 6px -1px rgba(0, 0, 0, 0.1)'
-          }}
-        //   onMouseEnter={(e) => {
-        //     e.target.style.backgroundColor = '#059669';
-        //     e.target.style.transform = 'translateY(-2px)';
-        //     e.target.style.boxShadow = '0 10px 15px -3px rgba(0, 0, 0, 0.1)';
-        //   }}
-        //   onMouseLeave={(e) => {
-        //     e.target.style.backgroundColor = '#10b981';
-        //     e.target.style.transform = 'translateY(0)';
-        //     e.target.style.boxShadow = '0 4px 6px -1px rgba(0, 0, 0, 0.1)';
-        //   }}
+          className="px-6 py-3 bg-emerald-500 text-white rounded-lg text-sm font-medium inline-flex items-center gap-2 shadow hover:bg-emerald-600 border-none"
         >
-          <span style={{ fontSize: '16px' }}>+</span>
+          <span className="text-base">+</span>
           Add New Doctor
         </button>
       </div>

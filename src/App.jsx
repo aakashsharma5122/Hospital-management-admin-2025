@@ -3,17 +3,14 @@ import { BrowserRouter as Router, Routes, Route, Navigate, useNavigate, useLocat
 import { ToastContainer } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import './App.css';
-import Sidebar from './components/Sidebar';
-import Header from './components/Header';
-import Footer from './components/Footer';
-import Users from './components/Users';
-import Posts from './components/Posts';
+import Sidebar from './layout/Sidebar';
+import Header from './layout/Header';
+import Footer from './layout/Footer';
 import Dashboard from './components/Dashboard';
-import Settings from './components/Settings';
-import PatientManagement from './components/PatientManagement';
 import Login from './pages/Login';
 import Profile from './pages/Profile';
-import DoctorList from './components/doctor/DoctorList';
+import DoctorList from './pages/doctor/DoctorList';
+import PatientList from './pages/patient/patientList';
 
 // Main Application Layout Component
 const AppLayout = () => {
@@ -38,28 +35,6 @@ const AppLayout = () => {
     localStorage.removeItem('userEmail');
     localStorage.removeItem('userName');
     navigate('/login');
-  };
-
-  const getPageTitle = () => {
-    const path = location.pathname.substring(1);
-    switch (path) {
-      case 'dashboard':
-        return 'Dashboard';
-      case 'users':
-        return 'Users';
-      case 'patient-list':
-      case 'patient-registration':
-      case 'patient-history':
-        return 'Patient Management';
-      case 'posts':
-        return 'Posts';
-      case 'settings':
-        return 'Settings';
-      case 'profile':
-        return 'Profile';
-      default:
-        return 'AS Group of Hospitals';
-    }
   };
 
   return (
@@ -89,12 +64,7 @@ const AppLayout = () => {
             <Route path="/" element={<Navigate to="/dashboard" replace />} />
             <Route path="/dashboard" element={<Dashboard />} />
             <Route path="/doctor-list" element={<DoctorList />} />
-            <Route path="/users" element={<Users />} />
-            <Route path="/patient-list" element={<PatientManagement />} />
-            <Route path="/patient-registration" element={<PatientManagement />} />
-            <Route path="/patient-history" element={<PatientManagement />} />
-            <Route path="/posts" element={<Posts />} />
-            <Route path="/settings" element={<Settings />} />
+            <Route path="/patient-list" element={<PatientList />} />
             <Route path="/profile" element={<Profile />} />
             <Route path="*" element={<Navigate to="/dashboard" replace />} />
           </Routes>
