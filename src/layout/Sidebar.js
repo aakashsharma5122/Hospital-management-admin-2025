@@ -23,7 +23,8 @@ const Sidebar = ({ activeTab, setActiveTab }) => {
       icon: '👨‍⚕️', 
       type: 'single',
     },
-    { id: 'patient-list', label: 'Patients Management', icon: '👨‍⚕️', type: 'single' }
+    { id: 'staff-list', label: 'Staff Management', icon: '🧑', type: 'single' },
+    { id: 'patient-list', label: 'Patients Management', type: 'single',icon: '🧑‍🤝‍🧑' },
   ];
 
   return (

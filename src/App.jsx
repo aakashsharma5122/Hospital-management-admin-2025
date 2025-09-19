@@ -12,6 +12,7 @@ import Profile from './pages/Profile';
 import DoctorList from './pages/doctor/DoctorList';
 import PatientList from './pages/patient/patientList';
 import HospitalList from './pages/hospital/hospitalList';
+import StaffList from './pages/staff/staffList';
 
 // Main Application Layout Component
 const AppLayout = () => {
@@ -67,6 +68,7 @@ const AppLayout = () => {
             <Route path="/doctor-list" element={<DoctorList />} />
             <Route path="/patient-list" element={<PatientList />} />
             <Route path="/hospital-list" element={<HospitalList />} />
+            <Route path="/staff-list" element={<StaffList />} />
             <Route path="/profile" element={<Profile />} />
             <Route path="*" element={<Navigate to="/dashboard" replace />} />
           </Routes>
