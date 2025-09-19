@@ -13,6 +13,11 @@ const Sidebar = ({ activeTab, setActiveTab }) => {
   const menuItems = [
     { id: 'dashboard', label: 'Dashboard', icon: '📊', type: 'single' },
     { 
+      id: 'hospital-list', 
+      label: 'Hospital Management', 
+      icon: '🏥', 
+      type: 'single'},
+    { 
       id: 'doctor-list', 
       label: 'Doctor Management', 
       icon: '👨‍⚕️', 
